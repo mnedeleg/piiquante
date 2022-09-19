@@ -6,9 +6,13 @@ mongoose.connect('mongodb+srv://MarionNed:P6piiqaunte@cluster0.zsz1rin.mongodb.n
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
 
+const app = express(); 
+
+app.use(express.json()); 
+
 
 const userRoute = require("./routes/user");
-const app = express();
+
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -17,7 +21,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/api/auth/signup", userRoute);
+
+app.use("/api/auth/", userRoute);
 
 module.exports = app;
 
