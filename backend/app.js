@@ -6,6 +6,8 @@ mongoose.connect('mongodb+srv://MarionNed:P6piiqaunte@cluster0.zsz1rin.mongodb.n
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
 
+const sauce = require
+
 const app = express();
  
 //premier middleware//
