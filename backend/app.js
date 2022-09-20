@@ -1,12 +1,24 @@
-const express = require ('express');
+const express = require('express');
+
+require("dotenv").config();
+console.log(process.env.pwd);
+console.log(process.env.id);
+
+
+const app = express();
+
+app.listen(app.get("port"), () => {
+  console.log("Express server listening on port " + app.get("port"));
+});
+
+
 const mongoose = require('mongoose');
-mongoose.connect('mongodb+srv://MarionNed:P6piiqaunte@cluster0.zsz1rin.mongodb.net/?retryWrites=true&w=majority',
+mongoose.connect('mongodb+srv://cluster0.zsz1rin.mongodb.net/?retryWrites=true&w=majority',
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
 
-const app = express(); 
 
 app.use(express.json()); 
 
@@ -22,7 +34,7 @@ app.use((req, res, next) => {
 });
 
 
-app.use("/api/auth/", userRoute);
+app.use("/api/auth/signup", userRoute);
 
 module.exports = app;
 
