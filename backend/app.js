@@ -1,6 +1,9 @@
 const express = require('express');
 
 require("dotenv").config();
+const id = process.env.id;
+const pwd = process.env.pwd;
+
 console.log(process.env.pwd);
 console.log(process.env.id);
 
@@ -34,7 +37,7 @@ app.use((req, res, next) => {
 });
 
 
-app.use("/api/auth/signup", userRoute);
+app.use("/api/auth/", userRoute);
 
 module.exports = app;
 
