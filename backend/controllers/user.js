@@ -1,25 +1,38 @@
 const bcrypt = require("bcrypt");
-const user = require("../models/user");
+const User = require("../models/user");
 const token = require("jsonwebtoken");
 
 exports.signup = (req, res, next) => {
     bcrypt.hash(req.body.password, 10)
     .then((hash) =>{
-        const user = new user({
+        const user = new User({
             email: req.body.email,
             password: hash
         });
-        user.save()
-        .then(() => res.status(201).json({message: "utilisateur créé"}))
+        User.init()
+        .then( ()=> { 
+            user.save((error, data)=>{
+                console.log(error, data);
+                if (error) {
+                    return res.status(400).json({error});
+                }
+                return  res.status(200).json({data});
+            })
+        })
+     
+        // .then(() => res.status(201).json({message: "utilisateur créé"}))
         
-        .catch(error => res.status(401).json({error}));
+        // .catch(error => res.status(401).json({error}));
     })
    
-    .catch(error =>res.status(500).json({error}));
+    .catch(error =>{
+        console.log(error);
+        res.status(500).json({error});
+    });
 };
 
 exports.login = (req, res, next) => {
-    user.findOne({email: req.body.email})
+    User.findOne({email: req.body.email})
     .then(user => {
         if (user === null){
             res.status(401).json({message: "Paire identifiant/mot de passe incorrecte"})

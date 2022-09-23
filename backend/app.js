@@ -16,7 +16,8 @@ app.listen(app.get("port"), () => {
 
 
 const mongoose = require('mongoose');
-mongoose.connect('mongodb+srv://cluster0.zsz1rin.mongodb.net/?retryWrites=true&w=majority',
+const dataBaseUrl = `mongodb+srv://${id}:${pwd}@cluster0.zsz1rin.mongodb.net/?retryWrites=true&w=majority`
+mongoose.connect(dataBaseUrl,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
