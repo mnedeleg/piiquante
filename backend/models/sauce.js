@@ -1,6 +1,6 @@
-const mongoose = require ("mongoose");
+const mongoose = require('mongoose');
 
-const sauceSchema = moogoose.schema ({
+const sauceSchema = moogoose.Schema ({
     title : { type: String, required: true},
     description : { type: String, required: true},
     imageURL : { type: String, required: true},
