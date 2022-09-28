@@ -1,6 +1,6 @@
 const express = require('express');
 
-require("dotenv").config();
+require('dotenv').config();
 const id = process.env.id;
 const pwd = process.env.pwd;
 
@@ -14,7 +14,6 @@ app.listen(app.get("port"), () => {
   console.log("Express server listening on port " + app.get("port"));
 });
 
-const sauce = require("./models/sauce");
 
 const mongoose = require('mongoose');
 const dataBaseUrl = `mongodb+srv://${id}:${pwd}@cluster0.zsz1rin.mongodb.net/?retryWrites=true&w=majority`
@@ -26,15 +25,6 @@ mongoose.connect(dataBaseUrl,
 
 app.use(express.json()); 
 
-app.post('/api/sauce', (req, res, next) =>{
-  const sauce = new sauce ({
-    ...req.body
-  });
-  sauce.save()
-  .then(()=> res.status(201).json({message: "Sauce enregistrée"}))
-  .catch(error => res.status(400).json({ error }));
-});
-
 const userRoute = require("./routes/user");
 
 app.use((req, res, next) => {
@@ -44,6 +34,22 @@ app.use((req, res, next) => {
   next();
 });
 
+const sauces = require("./models/sauce");
+
+app.post('/api/sauce', (req, res, next) =>{
+  const sauce = new sauce ({
+    ...req.body
+  });
+  sauce.save()
+  .then(()=> res.status(201).json({message: "Sauce enregistrée"}))
+  .catch(error => res.status(400).json({ error }));
+});
+
+app.use('.api/sauce', (req, res, next) => {
+sauces.find()
+.then(sauce => res.status(200).json(things))
+.catch(error => res.status(400).json({error}));
+});
 
 app.use("/api/auth/", userRoute);
 
