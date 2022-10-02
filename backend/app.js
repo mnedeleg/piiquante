@@ -35,7 +35,6 @@ mongoose.connect(dataBaseUrl,
 
 
 const userRoute = require("./routes/user");
-
 const sauceRoute = require("./routes/sauce")
 
 // app.use((req, res, next) => {
