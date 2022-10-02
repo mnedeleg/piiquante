@@ -1,5 +1,5 @@
 const express = require('express');
-
+const path = require("path");
 require('dotenv').config();
 const multer = require('./middleware/multer-config');
 const cors = require('cors');
@@ -45,9 +45,8 @@ const sauceRoute = require("./routes/sauce")
 // });
 
 
-app.use("/api/sauce", sauceRoute);
-
+app.use("/api/sauces", sauceRoute);
 app.use("/api/auth/", userRoute);
-
+app.use("/image", express.static(path.join(__dirname, "image")));
 module.exports = app;
 
