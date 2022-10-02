@@ -36,6 +36,7 @@ mongoose.connect(dataBaseUrl,
 
 const userRoute = require("./routes/user");
 
+const sauceRoute = require("./routes/sauce")
 
 // app.use((req, res, next) => {
 //   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -44,35 +45,9 @@ const userRoute = require("./routes/user");
 //   next();
 // });
 
-const Sauce = require("./models/sauce");
 
-app.post('/api/sauces', multer , (req, res, next) =>{
-  console.log(req.body);
-  console.log(JSON.parse(req.body.sauce));
-  console.log(req.file);
-  const data = JSON.parse(req.body.sauce)
-  const sauce = new Sauce ({
-    title: data.name,
-    description: data.description,
-    imageURL: `http://localhost:3000/${req.file.path}`,
-    userId: data.userId,
-    price: data.heat
-  });
-  Sauce.init()
-  sauce.save()
-  .then(()=> res.status(201).json({message: "Sauce enregistrée"}))
-  .catch(error => res.status(400).json({ error }));
+app.use("/api/sauce", sauceRoute);
 
-});
-
-app.use('/api/sauces', (req, res, next) => {
-Sauce.find()
-.then(sauce => res.status(200).json(sauce))
-.catch(error => res.status(400).json({error}));
-});
-
-
-// rajouter un multer ici ? //
 app.use("/api/auth/", userRoute);
 
 module.exports = app;
