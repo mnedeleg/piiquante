@@ -35,7 +35,8 @@ mongoose.connect(dataBaseUrl,
 
 
 const userRoute = require("./routes/user");
-const sauceRoute = require("./routes/sauce")
+const sauceRoute = require("./routes/sauce");
+const likeRoute = require("./routes/like");
 
 // app.use((req, res, next) => {
 //   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -45,7 +46,7 @@ const sauceRoute = require("./routes/sauce")
 // });
 
 
-app.use("/api/sauces", sauceRoute);
+app.use("/api/sauces", sauceRoute, likeRoute);
 app.use("/api/auth/", userRoute);
 app.use("/image", express.static(path.join(__dirname, "image")));
 module.exports = app;
