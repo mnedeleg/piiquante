@@ -1,10 +1,47 @@
 const Sauce = require("../models/sauce");
-const sauce = require("../models/sauce");
+const updateSauce = require("./sauceHelpers/updateSauce");
+const handleLikes = require("./sauceHelpers/handleLike");
+const handleDislikes = (req, res, sauce) => {
+    const userId = req.body.userId; 
+    if(!sauce.usersDisliked.includes(userId) ){
+        console.log("instruction to follow : dislikes");
+        let { likes, dislikes, usersDisliked, usersLiked } = sauce;
+        usersLiked = usersLiked.filter(userId => userId != userId);
+        dislikes += 1;
+        usersDisliked.push(userId);
+        likes = likes == 0 ? 0 : likes - 1;
+        return updateSauce(req, res, {
+            usersDisliked: usersDisliked, 
+            likes: likes, 
+            dislikes: dislikes,
+            usersLiked: usersLiked
+        }, "dislike");
+    }else{
+        return  res.status(400).json({message: "Utilisateur a déjà disliké"})
+    }
+}
 
+const handleNoLikeDislike = (req, res, sauce) => {
+    const userId = req.body.userId; 
+    let { likes, dislikes, usersDisliked, usersLiked } = sauce;
+    if(usersDisliked.includes(userId) ){
+        dislikes -= 1;
+        usersDisliked = usersDisliked.filter(userId => userId != userId);
+    }
+    if(usersLiked.includes(userId) ){
+        dislikes += 1;
+        usersLiked = usersLiked.filter(userId => userId != userId);
+    }
+    return updateSauce(req, res, {
+        usersDisliked: usersDisliked, 
+        likes: likes, 
+        dislikes: dislikes,
+        usersLiked: usersLiked
+    });
+}
 
 // adding like/Dislike
 exports.addlikeDislike = (req, res, next) => {
-   
     console.log("test route like");
 
     // req.body = userId + likes //
@@ -12,42 +49,32 @@ exports.addlikeDislike = (req, res, next) => {
     console.log("contenu de req.body.likes", req.body.likes);
     console.log("contenu req.params. ctrl like", req.params);
     console.log("id >> _id", {_id : req.params.id})
+
 // findOne, aller chercher la sauce dans la base de donné //
     Sauce.findOne({_id : req.params.id})
     .then((sauce) => {
         console.log("content promise");
         console.log(sauce);
-        // adding likes //
-        if(!sauce.usersLiked.includes(req.body.userId && req.body.likes === 1)){
-            console.log("instruction to follow");
-            Sauce.updateOne({_id : req.params.id}, {$inc: {likes: 1}, $push: {usersLiked: req.body.userId}})
-         
-                .then(() => res.status(201).json({message: 'adding like / +1'}))
-                .catch((error) => res.status(400).json({message: 'problem like'}));
-        }
+        const likeValues = [1, 0, -1];
+        const userId = req.body.userId; 
+        if(likeValues.includes(req.body.likes)){
 
-        // no like === 0, back to neutral //
-        if(sauce.usersLiked.includes(req.body.userId && req.body.likes === 0)){
-            console.log("instruction to follow : neutral");
-            Sauce.updateOne({_id : req.params.id}, {$inc: {likes: -1}, $pull: {usersLiked: req.body.userId}})
-         
-                .then(() => res.status(201).json({message: 'neutral / 0'}))
-                .catch((error) => res.status(400).json({message: 'problem neutral'}));
-        }
+            const handlers = {
+                "handler1": handleLikes,
+                "handler-1": handleDislikes,
+                "handler0": handleNoLikeDislike
+            }
+            const funcKey = `handler${req.body.likes}`
+            return handlers[funcKey](req, res, sauce)
 
-        // dislike === -1 //
-        if(!sauce.usersDisliked.includes(req.body.userId && req.body.likes === -1)){
-            console.log("instruction to follow : dislike");
-            Sauce.updateOne({_id : req.params.id}, {$inc: {dislikes: 1}, $push: {usersDisliked: req.body.userId}})
-         
-                .then(() => res.status(201).json({message: 'dislike / +1'}))
-                .catch((error) => res.status(400).json({message: 'problem dislike'}));
+        }else{
+            res.status(400).json({messsage: "La valeur de like envoyé n'est pas bonne ! "})
         }
-
+       
     })
-    .catch((error) => res.status(404).json({message: 'problem'}));
-    
-    
-    }
+        .catch((error) => res.status(404).json({message: 'problem', error: error.message}));
+}
+
+
         
     
