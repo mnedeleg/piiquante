@@ -1,4 +1,5 @@
 const updateSauce = require("./updateSauce.js")
+
 const handleLikes = (req, res, sauce) => {
     const userId = req.body.userId; 
     if(!sauce.usersLiked.includes(userId)){

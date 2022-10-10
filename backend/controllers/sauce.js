@@ -3,11 +3,9 @@ const sauce = require("../models/sauce");
 
  //create a sauce //
 exports.createSauce =  (req, res, next) => {
-    console.log(req.body);
-    console.log(JSON.parse(req.body.sauce));
-    console.log(req.file);
+   
     const data = JSON.parse(req.body.sauce)
-    console.log(data);
+    
     const sauce = new Sauce ({
       name: data.name,
       description: data.description,
