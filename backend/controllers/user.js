@@ -19,12 +19,7 @@ exports.signup = (req, res, next) => {
                 return  res.status(200).json({data});
             })
         })
-     
-        // .then(() => res.status(201).json({message: "utilisateur créé"}))
-        
-        // .catch(error => res.status(401).json({error}));
     })
-   
     .catch(error =>{
         console.log(error);
         res.status(500).json({error});
@@ -60,5 +55,4 @@ exports.login = (req, res, next) => {
     .catch(error => {
         res.status(500).json({error});
     })
-
 };
