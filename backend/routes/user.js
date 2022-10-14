@@ -4,7 +4,7 @@ const userCtrl = require("../controllers/user");
 const password = require("../middleware/password");
 const router = express.Router();
 
-router.post("/signup", userCtrl.signup);
-router.post("/login", password, userCtrl.login);
+router.post("/signup", password, userCtrl.signup);
+router.post("/login", userCtrl.login);
 
 module.exports = router;

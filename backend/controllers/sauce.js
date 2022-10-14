@@ -1,12 +1,25 @@
 const Sauce = require("../models/sauce");
 // const sauce = require("../models/sauce");
 
+let validateSauce = (sauce) => {
+  console.log(sauce);
+  console.log(validateField(sauce.name));
+  return (validateField(sauce.name) && validateField(sauce.mainPepper) && validateField(sauce.manufacturer)&& validateField(sauce.description))
+}
+  
+let validateField = (field) => field != null && field != "" && field.length > 3
+
  //create a sauce //
 exports.createSauce =  (req, res, next) => {
   console.log("Test creation sauce");
-  console.log(req.body);
-  
+
+ 
     const data = JSON.parse(req.body.sauce)
+
+    if(!validateSauce(data)) {
+      return res.status(400).json({error : "Texte trop court"}); 
+    }
+
    console.log(req.file);
     const sauce = new Sauce ({
       name: data.name,
