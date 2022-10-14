@@ -1,11 +1,13 @@
 const Sauce = require("../models/sauce");
-const sauce = require("../models/sauce");
+// const sauce = require("../models/sauce");
 
  //create a sauce //
 exports.createSauce =  (req, res, next) => {
-   
+  console.log("Test creation sauce");
+  console.log(req.body);
+  
     const data = JSON.parse(req.body.sauce)
-    
+   console.log(req.file);
     const sauce = new Sauce ({
       name: data.name,
       description: data.description,
@@ -20,20 +22,25 @@ exports.createSauce =  (req, res, next) => {
       usersDisliked: []
     });
 
+
     Sauce.init()
     sauce.save()
     .then(()=> res.status(201).json({message: "Sauce enregistrée"}))
     .catch(error => res.status(400).json({ error }));
+  
   }
+  
 
 // modify sauce //
 exports.modifySauce = (req, res, next) => {
+
     const sauceObject = req.file ?{
         ...JSON.parse(req.body.sauce),
         imageUrl : `${req.protocol}://${req.get("host")}/image/${req.file.filename}`
     } : {...req.body};
 
     delete sauceObject._userId;
+
     Sauce.findOne({_id: req.params.id})
     .then((sauce) => {
         if (sauce.userId != req.auth.userId) {

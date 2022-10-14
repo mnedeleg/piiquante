@@ -6,8 +6,9 @@ const handleDislikes = (req, res, sauce) => {
         console.log("instruction to follow : dislikes");
         let { likes, dislikes, usersDisliked, usersLiked } = sauce;
         usersLiked = usersLiked.filter(userId => userId != userId);
-        dislikes += 1;
         usersDisliked.push(userId);
+        
+        dislikes += 1;
         likes = likes == 0 ? 0 : likes - 1;
         return updateSauce(req, res, {
             usersDisliked: usersDisliked, 
